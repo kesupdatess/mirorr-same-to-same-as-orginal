@@ -7,7 +7,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -17,7 +16,6 @@
             align-items: center;
             padding: 20px;
         }
-
         .container {
             background: white;
             border-radius: 20px;
@@ -26,191 +24,59 @@
             width: 100%;
             padding: 40px;
         }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #333; font-size: 28px; margin-bottom: 10px; }
+        .header p { color: #666; font-size: 14px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #333; font-weight: 600; font-size: 14px; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0;
+            border-radius: 10px; font-size: 14px; transition: border-color 0.3s;
         }
-
-        .header h1 {
-            color: #333;
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #667eea; }
         .btn {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
+            width: 100%; padding: 15px; border: none; border-radius: 10px;
+            font-size: 16px; font-weight: 600; cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            margin-bottom: 20px;
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: white;
-            display: none;
-        }
-
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; margin-bottom: 20px; }
+        .btn-success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; display: none; }
         .qr-section {
-            display: none;
-            text-align: center;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 15px;
-            margin-bottom: 20px;
+            display: none; text-align: center; padding: 20px;
+            background: #f8f9fa; border-radius: 15px; margin-bottom: 20px;
         }
-
-        .qr-section img {
-            max-width: 250px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .qr-section h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .upload-section {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .file-input-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .file-input-wrapper input[type=file] {
-            position: absolute;
-            left: -9999px;
-        }
-
+        .qr-section img { max-width: 250px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .qr-section h3 { margin-bottom: 15px; color: #333; }
+        .upload-section { display: none; margin-top: 20px; }
+        .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; width: 100%; }
+        .file-input-wrapper input[type=file] { position: absolute; left: -9999px; }
         .file-label {
-            display: block;
-            padding: 15px;
-            background: #f0f0f0;
-            border: 2px dashed #ccc;
-            border-radius: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
+            display: block; padding: 15px; background: #f0f0f0; border: 2px dashed #ccc;
+            border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.3s;
         }
-
-        .file-label:hover {
-            background: #e8e8e8;
-            border-color: #667eea;
-        }
-
-        .success-message {
-            display: none;
-            text-align: center;
-            padding: 30px;
-        }
-
-        .success-message .icon {
-            font-size: 60px;
-            margin-bottom: 15px;
-        }
-
-        .success-message h2 {
-            color: #11998e;
-            margin-bottom: 10px;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 20px;
-        }
-
+        .file-label:hover { background: #e8e8e8; border-color: #667eea; }
+        .success-message { display: none; text-align: center; padding: 30px; }
+        .success-message .icon { font-size: 60px; margin-bottom: 15px; }
+        .success-message h2 { color: #11998e; margin-bottom: 10px; }
+        .loading { display: none; text-align: center; padding: 20px; }
         .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
+            border: 4px solid #f3f3f3; border-top: 4px solid #667eea;
+            border-radius: 50%; width: 40px; height: 40px;
+            animation: spin 1s linear infinite; margin: 0 auto 15px;
         }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .amount-display {
-            font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
-            margin: 10px 0;
-        }
-
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .amount-display { font-size: 24px; font-weight: bold; color: #667eea; margin: 10px 0; }
         .error-message {
-            background: #ffebee;
-            color: #c62828;
-            padding: 10px;
-            border-radius: 8px;
-            margin: 10px 0;
-            display: none;
-            font-size: 14px;
+            background: #ffebee; color: #c62828; padding: 10px;
+            border-radius: 8px; margin: 10px 0; display: none; font-size: 14px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎓 Support KES Updates</h1>
+            <h1> Support KES Updates</h1>
             <p>Your contribution helps us keep students informed</p>
         </div>
 
@@ -219,50 +85,36 @@
                 <label for="name">Full Name *</label>
                 <input type="text" id="name" placeholder="Enter your name" required>
             </div>
-
             <div class="form-group">
                 <label for="email">Email *</label>
                 <input type="email" id="email" placeholder="Enter your email" required>
             </div>
-
             <div class="form-group">
                 <label for="amount">Donation Amount (₹) *</label>
                 <input type="number" id="amount" placeholder="Enter amount (min ₹10)" min="10" required>
             </div>
-
             <div class="form-group">
                 <label for="message">Message (Optional)</label>
                 <textarea id="message" rows="3" placeholder="Any message for the team..."></textarea>
             </div>
-
             <div class="error-message" id="errorMessage"></div>
-
-            <button class="btn btn-primary" onclick="generateQR()">
-                Continue to Payment
-            </button>
+            <button class="btn btn-primary" onclick="generateQR()">Continue to Payment</button>
         </div>
 
         <div id="qrSection" class="qr-section">
             <h3>Scan & Pay</h3>
             <div class="amount-display">₹<span id="displayAmount">0</span></div>
             <img src="assets/qr_codes/donation_qr_100rs.png" alt="UPI QR Code">
-            <p style="margin-top: 15px; color: #666; font-size: 13px;">
-                Open any UPI app and scan this code
-            </p>
+            <p style="margin-top: 15px; color: #666; font-size: 13px;">Open any UPI app and scan this code</p>
 
             <div class="upload-section" id="uploadSection">
                 <p style="margin-bottom: 15px; font-weight: 600;">Upload Payment Screenshot *</p>
                 <div class="file-input-wrapper">
                     <input type="file" id="screenshot" accept="image/*" onchange="handleFileSelect()">
-                    <label for="screenshot" class="file-label" id="fileLabel">
-                        📷 Click to upload screenshot
-                    </label>
+                    <label for="screenshot" class="file-label" id="fileLabel">📷 Click to upload screenshot</label>
                 </div>
             </div>
-
-            <button class="btn btn-success" id="submitBtn" onclick="submitDonation()">
-                Submit Donation
-            </button>
+            <button class="btn btn-success" id="submitBtn" onclick="submitDonation()">Submit Donation</button>
         </div>
 
         <div id="loading" class="loading">
@@ -274,9 +126,7 @@
             <div class="icon">✅</div>
             <h2>Thank You!</h2>
             <p>Your donation has been recorded.</p>
-            <p style="margin-top: 10px; color: #666; font-size: 14px;">
-                Status: <strong>Pending Verification</strong>
-            </p>
+            <p style="margin-top: 10px; color: #666; font-size: 14px;">Status: <strong>Pending Verification</strong></p>
         </div>
     </div>
 
@@ -288,6 +138,7 @@
 
         let donationData = {};
         let selectedFile = null;
+        let currentDonationId = null; // Naya variable ID save karne ke liye
 
         function showError(msg) {
             const errorDiv = document.getElementById('errorMessage');
@@ -296,7 +147,8 @@
             setTimeout(() => errorDiv.style.display = 'none', 3000);
         }
 
-        function generateQR() {
+        // 1. GENERATE QR (Data yahan save hoga)
+        async function generateQR() {
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const amount = document.getElementById('amount').value;
@@ -306,7 +158,6 @@
                 showError('Please fill all required fields!');
                 return;
             }
-
             if (amount < 10) {
                 showError('Minimum donation amount is ₹10');
                 return;
@@ -314,6 +165,30 @@
 
             donationData = { name, email, amount: parseInt(amount), message };
 
+            // Supabase me data save karo
+            const { data, error } = await supabaseClient
+                .from('donations')
+                .insert([
+                    {
+                        name: donationData.name,
+                        email: donationData.email,
+                        amount: donationData.amount,
+                        message: donationData.message || null,
+                        screenshot_url: null, // Abhi screenshot nahi hai
+                        status: 'qr_generated'
+                    }
+                ])
+                .select();
+
+            if (error) {
+                showError('Database error: ' + error.message);
+                return;
+            }
+
+            // ID save karo taaki baad me update kar sakein
+            currentDonationId = data[0].id;
+
+            // UI change karo
             document.getElementById('formSection').style.display = 'none';
             document.getElementById('qrSection').style.display = 'block';
             document.getElementById('displayAmount').textContent = amount;
@@ -336,6 +211,7 @@
             }
         }
 
+        // 2. SUBMIT DONATION (Screenshot yahan update hoga)
         async function submitDonation() {
             if (!selectedFile) {
                 showError('Please upload payment screenshot!');
@@ -346,10 +222,11 @@
             document.getElementById('loading').style.display = 'block';
 
             try {
+                // Screenshot upload karo
                 const fileExt = selectedFile.name.split('.').pop();
                 const fileName = `donation_${Date.now()}.${fileExt}`;
 
-                const { data: uploadData, error: uploadError } = await supabaseClient.storage
+                const { error: uploadError } = await supabaseClient.storage
                     .from('donation-screenshots')
                     .upload(fileName, selectedFile);
 
@@ -361,20 +238,16 @@
 
                 const screenshotUrl = urlData.publicUrl;
 
-                const { data, error } = await supabaseClient
+                // Purani row ko UPDATE karo screenshot ke saath
+                const { error: updateError } = await supabaseClient
                     .from('donations')
-                    .insert([
-                        {
-                            name: donationData.name,
-                            email: donationData.email,
-                            amount: donationData.amount,
-                            message: donationData.message || null,
-                            screenshot_url: screenshotUrl,
-                            status: 'pending'
-                        }
-                    ]);
+                    .update({
+                        screenshot_url: screenshotUrl,
+                        status: 'pending'
+                    })
+                    .eq('id', currentDonationId);
 
-                if (error) throw error;
+                if (updateError) throw updateError;
 
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('success').style.display = 'block';
