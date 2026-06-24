@@ -3,385 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KES Updates - Plant a Tree</title>
-    <!-- Supabase & Confetti Scripts -->
+    <title>Support KES Updates - Donation</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #fafafa; --card: #ffffff; --text: #111827; --text-muted: #6b7280;
-            --border: #e5e7eb; --primary: #059669; --primary-hover: #047857;
-            --primary-light: #ecfdf5; --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .container { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); max-width: 480px; width: 100%; overflow: hidden; }
-        
-        .header { padding: 32px; text-align: center; border-bottom: 1px solid var(--border); }
-        .logo { font-size: 24px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .logo span { color: var(--primary); }
-        .header p { color: var(--text-muted); font-size: 14px; }
-        .secure-badge { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 12px; color: var(--text-muted); background: var(--bg); padding: 4px 12px; border-radius: 20px; }
-
-        .content { padding: 32px; }
-        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-        .stat-box { background: var(--bg); padding: 16px; border-radius: 12px; text-align: center; border: 1px solid var(--border); }
-        .stat-val { font-size: 20px; font-weight: 700; color: var(--primary); }
-        .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .steps { display: flex; justify-content: space-between; margin-bottom: 32px; position: relative; }
-        .steps::before { content: ''; position: absolute; top: 12px; left: 10%; right: 10%; height: 1px; background: var(--border); z-index: 0; }
-        .step { flex: 1; text-align: center; position: relative; z-index: 1; }
-        .step-num { width: 24px; height: 24px; border-radius: 50%; background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; margin-bottom: 6px; }
-        .step.active .step-num { background: var(--text); border-color: var(--text); color: white; }
-        .step.completed .step-num { background: var(--primary); border-color: var(--primary); color: white; }
-        .step-text { font-size: 11px; color: var(--text-muted); font-weight: 500; }
-
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+        }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #333; font-size: 28px; margin-bottom: 10px; }
+        .header p { color: #666; font-size: 14px; }
         .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 8px; }
-        .input-wrapper input, .input-wrapper textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; font-family: inherit; transition: all 0.2s; background: var(--card); }
-        .input-wrapper input:focus, .input-wrapper textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
-        .input-wrapper textarea { resize: vertical; min-height: 70px; }
-
-        .tree-selector { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
-        .tree-chip { padding: 10px 4px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); cursor: pointer; text-align: center; font-size: 13px; font-weight: 500; transition: all 0.2s; }
-        .tree-chip:hover { border-color: var(--primary); }
-        .tree-chip.active { background: var(--primary-light); border-color: var(--primary); color: var(--primary); font-weight: 600; }
-
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
-        .btn-primary { background: var(--text); color: white; }
-        .btn-primary:hover { background: #000; transform: translateY(-1px); }
-        .btn-success { background: var(--primary); color: white; display: none; }
-        .btn-success:hover { background: var(--primary-hover); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .qr-section { display: none; text-align: center; animation: fadeIn 0.4s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .amount-card { background: var(--primary-light); border: 1px solid var(--primary); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-        .amount-label { font-size: 12px; color: var(--primary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-        .amount-val { font-size: 32px; font-weight: 700; color: var(--primary); margin-top: 4px; }
-        .qr-box { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 16px; }
-        .qr-box img { max-width: 200px; }
-        .upload-box { border: 2px dashed var(--border); border-radius: 8px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.2s; margin-bottom: 16px; }
-        .upload-box:hover { border-color: var(--primary); background: var(--primary-light); }
-        .upload-box.uploaded { border-style: solid; border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
-
-        .loading-section { display: none; text-align: center; padding: 40px 0; }
-        .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .success-section { display: none; text-align: center; animation: fadeIn 0.5s; }
-        .success-icon { width: 56px; height: 56px; background: var(--primary-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px; }
-        .success-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
-        .success-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #333; font-weight: 600; font-size: 14px; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0;
+            border-radius: 10px; font-size: 14px; transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #667eea; }
+        .btn {
+            width: 100%; padding: 15px; border: none; border-radius: 10px;
+            font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; display: none; }
         
-        .receipt-preview { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: left; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .receipt-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 16px; }
-        .receipt-logo { font-weight: 700; font-size: 16px; color: var(--primary); }
-        .receipt-id { font-size: 12px; color: var(--text-muted); font-family: monospace; }
-        .receipt-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; }
-        .receipt-row .label { color: var(--text-muted); }
-        .receipt-row .val { font-weight: 600; }
-        .receipt-footer { margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border); text-align: center; font-size: 11px; color: var(--text-muted); }
-
-        .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .action-btn { padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: white; cursor: pointer; font-weight: 500; font-size: 13px; transition: all 0.2s; }
-        .action-btn:hover { background: var(--bg); border-color: var(--text-muted); }
-
-        .recent-donors { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
-        .recent-title { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
-        .donor-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; font-size: 13px; }
-        .donor-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
-        .donor-info { flex: 1; text-align: left; }
-        .donor-name { font-weight: 500; }
-        .donor-time { font-size: 11px; color: var(--text-muted); }
-        .donor-trees { font-weight: 600; color: var(--primary); font-size: 12px; }
-
-        .error-msg { background: #fef2f2; color: #ef4444; padding: 12px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; display: none; border: 1px solid #fee2e2; }
-        .toast { position: fixed; top: 20px; right: 20px; background: white; padding: 12px 16px; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border: 1px solid var(--border); display: none; font-size: 13px; font-weight: 500; z-index: 100; }
+        .qr-section {
+            display: none; text-align: center; padding: 20px;
+            background: #f8f9fa; border-radius: 15px; margin-bottom: 20px;
+        }
+        .qr-section img { max-width: 250px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .qr-section h3 { margin-bottom: 15px; color: #333; }
+        
+        .upload-section { display: none; margin-top: 20px; }
+        .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; width: 100%; }
+        .file-input-wrapper input[type=file] { position: absolute; left: -9999px; }
+        .file-label {
+            display: block; padding: 15px; background: #f0f0f0; border: 2px dashed #ccc;
+            border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.3s;
+        }
+        .file-label:hover { background: #e8e8e8; border-color: #667eea; }
+        
+        .success-message { display: none; text-align: center; padding: 30px; }
+        .success-message .icon { font-size: 60px; margin-bottom: 15px; }
+        .success-message h2 { color: #11998e; margin-bottom: 10px; }
+        
+        .loading { display: none; text-align: center; padding: 20px; }
+        .spinner {
+            border: 4px solid #f3f3f3; border-top: 4px solid #667eea;
+            border-radius: 50%; width: 40px; height: 40px;
+            animation: spin 1s linear infinite; margin: 0 auto 15px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .amount-display { font-size: 24px; font-weight: bold; color: #667eea; margin: 10px 0; }
+        .error-message {
+            background: #ffebee; color: #c62828; padding: 10px;
+            border-radius: 8px; margin: 10px 0; display: none; font-size: 14px;
+        }
     </style>
 </head>
 <body>
-
-<div class="toast" id="toast"></div>
-
-<div class="container">
-    <div class="header">
-        <div class="logo">🌳 <span>KES</span> Updates</div>
-        <p>Plant a tree today, save tomorrow.</p>
-        <div class="secure-badge">🔒 Secure & Verified Donation</div>
-    </div>
-
-    <div class="content">
-        <div class="stats">
-            <div class="stat-box"><div class="stat-val" id="totalTrees">0</div><div class="stat-label">Trees Funded</div></div>
-            <div class="stat-box"><div class="stat-val" id="totalDonors">0</div><div class="stat-label">Planters</div></div>
-        </div>
-
-        <div class="steps">
-            <div class="step active" id="step1"><div class="step-num">1</div><div class="step-text">Details</div></div>
-            <div class="step" id="step2"><div class="step-num">2</div><div class="step-text">Pay</div></div>
-            <div class="step" id="step3"><div class="step-num">3</div><div class="step-text">Done</div></div>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Support KES Updates</h1>
+            <p>Your contribution helps us keep students informed</p>
         </div>
 
         <div id="formSection">
-            <div class="form-group"><label>Full Name</label><div class="input-wrapper"><input type="text" id="name" placeholder="Enter your name"></div></div>
-            <div class="form-group"><label>Email Address</label><div class="input-wrapper"><input type="email" id="email" placeholder="your@email.com"></div></div>
             <div class="form-group">
-                <label>Select Trees to Plant (100 = 1 Tree)</label>
-                <div class="tree-selector">
-                    <div class="tree-chip" onclick="selectTrees(1, 100, this)">1 Tree</div>
-                    <div class="tree-chip active" onclick="selectTrees(5, 500, this)">5 Trees</div>
-                    <div class="tree-chip" onclick="selectTrees(10, 1000, this)">10 Trees</div>
-                    <div class="tree-chip" onclick="selectTrees(25, 2500, this)">25 Trees</div>
-                </div>
-                <div class="input-wrapper"><input type="number" id="amount" placeholder="Or enter custom amount (min ₹100)" min="100"></div>
+                <label for="name">Full Name *</label>
+                <input type="text" id="name" placeholder="Enter your name" required>
             </div>
-            <div class="form-group"><label>Message (Optional)</label><div class="input-wrapper"><textarea id="message" placeholder="Leave a message for nature..."></textarea></div></div>
-
-            <div class="error-msg" id="errorMsg"></div>
-            <button class="btn btn-primary" id="continueBtn" onclick="generateQR()">Continue to Payment</button>
-
-            <div class="recent-donors">
-                <div class="recent-title">Recent Tree Planters 🌱</div>
-                <div id="recentList"><div style="text-align:center; color:var(--text-muted); font-size:12px; padding:10px;">Loading...</div></div>
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
             </div>
+            <div class="form-group">
+                <label for="amount">Donation Amount (₹) *</label>
+                <input type="number" id="amount" placeholder="Enter amount (min ₹10)" min="10" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Message (Optional)</label>
+                <textarea id="message" rows="3" placeholder="Any message for the team..."></textarea>
+            </div>
+            <div class="error-message" id="errorMessage"></div>
+            <button class="btn btn-primary" onclick="generateQR()">Continue to Payment</button>
         </div>
 
         <div id="qrSection" class="qr-section">
-            <div class="amount-card">
-                <div class="amount-label">Total Amount</div>
-                <div class="amount-val">₹<span id="displayAmount">0</span></div>
-                <div style="font-size:12px; color:var(--primary); margin-top:4px; font-weight:600;">🌳 Plants <span id="displayTrees">0</span> Trees</div>
-            </div>
+            <h3>Scan & Pay</h3>
+            <div class="amount-display">₹<span id="displayAmount">0</span></div>
+            <img src="assets/qr_codes/donation_qr_100rs.png" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=yourupi@okaxis&pn=KES%20Updates&am=100&cu=INR'" alt="UPI QR Code">
+            <p style="margin-top: 15px; color: #666; font-size: 13px;">Open any UPI app and scan this code</p>
 
-            <div class="qr-box">
-                <!-- Online QR placeholder so it works in configurators too! -->
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=yourupi@okaxis&pn=KES%20Updates&am=100&cu=INR" alt="UPI QR" id="qrImage">
-                <p style="font-size:12px; color:var(--text-muted); margin-top:12px;">Scan with any UPI App</p>
-            </div>
-
-            <input type="file" id="screenshot" accept="image/*" style="display:none;" onchange="handleFile()">
-            <label for="screenshot" class="upload-box" id="uploadBox">
-                <strong>📤 Click to upload payment screenshot</strong><br>
-                <span style="font-size:11px; color:var(--text-muted);">PNG, JPG up to 5MB</span>
-            </label>
-
-            <button class="btn btn-success" id="submitBtn" onclick="submitDonation()">Complete Donation</button>
-        </div>
-
-        <div id="loadingSection" class="loading-section">
-            <div class="spinner"></div>
-            <p style="font-weight: 600;">Processing Securely...</p>
-            <p style="font-size: 12px; color: var(--text-muted);">Please wait</p>
-        </div>
-
-        <div id="successSection" class="success-section">
-            <div class="success-icon">✓</div>
-            <div class="success-title">Thank You for Planting Trees!</div>
-            <div class="success-sub">Your contribution makes a real difference.</div>
-
-            <div class="receipt-preview" id="receiptPreview">
-                <div class="receipt-header">
-                    <div class="receipt-logo">🌳 KES Updates</div>
-                    <div class="receipt-id" id="r-id">#000000</div>
+            <div class="upload-section" id="uploadSection">
+                <p style="margin-bottom: 15px; font-weight: 600;">Upload Payment Screenshot *</p>
+                <div class="file-input-wrapper">
+                    <input type="file" id="screenshot" accept="image/*" onchange="handleFileSelect()">
+                    <label for="screenshot" class="file-label" id="fileLabel">📷 Click to upload screenshot</label>
                 </div>
-                <div class="receipt-row"><span class="label">Donor Name</span><span class="val" id="r-name">-</span></div>
-                <div class="receipt-row"><span class="label">Email</span><span class="val" id="r-email">-</span></div>
-                <div class="receipt-row"><span class="label">Amount Paid</span><span class="val" id="r-amount">₹0</span></div>
-                <div class="receipt-row"><span class="label">Trees Planted</span><span class="val" style="color:var(--primary);" id="r-trees">0 🌳</span></div>
-                <div class="receipt-row"><span class="label">Date</span><span class="val" id="r-date">-</span></div>
-                <div class="receipt-footer">This is a computer-generated receipt. Thank you for supporting nature! 🌍</div>
             </div>
+            <button class="btn btn-success" id="submitBtn" onclick="submitDonation()">Submit Donation</button>
+        </div>
 
-            <div class="action-btns">
-                <button class="action-btn" onclick="printReceipt()">🖨️ Print Receipt</button>
-                <button class="action-btn" onclick="shareDonation()">📤 Share</button>
-            </div>
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Processing...</p>
+        </div>
+
+        <div id="success" class="success-message">
+            <div class="icon">✅</div>
+            <h2>Thank You!</h2>
+            <p>Your donation has been recorded.</p>
+            <p style="margin-top: 10px; color: #666; font-size: 14px;">Status: <strong>Pending Verification</strong></p>
         </div>
     </div>
-</div>
 
-<script>
-    const SUPABASE_URL = 'https://uegdizdnminwhkxcdcle.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVlZ2RpemRubWlud2hreGNkY2xlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwODk2MjgsImV4cCI6MjA5NzY2NTYyOH0.2wiAHbaoNoDva_tRseDAywVMu_6AioCGlVLgoVb0d6s';
-    
-    // Safe Supabase initialization
-    let supabase;
-    try {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    } catch (e) {
-        console.error("Supabase init failed:", e);
-    }
+    <script>
+        const SUPABASE_URL = 'https://uegdizdnminwhkxcdcle.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVlZ2RpemRubWlud2hreGNkY2xlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwODk2MjgsImV4cCI6MjA5NzY2NTYyOH0.2wiAHbaoNoDva_tRseDAywVMu_6AioCGlVLgoVb0d6s';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    let currentData = {}, currentFile = null, currentId = null;
+        let donationData = {};
+        let selectedFile = null;
+        let currentDonationId = null;
 
-    window.onload = () => { 
-        if(supabase) { loadStats(); loadRecent(); } 
-    };
+        function showError(msg) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = msg;
+            errorDiv.style.display = 'block';
+            setTimeout(() => errorDiv.style.display = 'none', 3000);
+        }
 
-    async function loadStats() {
-        try {
-            const { data } = await supabase.from('donations').select('amount');
-            if(data) {
-                const total = data.reduce((s, d) => s + (d.amount||0), 0);
-                document.getElementById('totalTrees').textContent = Math.floor(total / 100);
-                document.getElementById('totalDonors').textContent = data.length;
-            }
-        } catch(e) { console.log("Stats load error (might be offline/configurator):", e); }
-    }
+        async function generateQR() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const amount = document.getElementById('amount').value;
+            const message = document.getElementById('message').value.trim();
 
-    async function loadRecent() {
-        try {
-            const { data } = await supabase.from('donations').select('name, amount, created_at').order('created_at', {ascending:false}).limit(3);
-            const list = document.getElementById('recentList');
-            if(data && data.length) {
-                list.innerHTML = data.map(d => {
-                    const trees = Math.floor((d.amount||0)/100);
-                    const init = d.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-                    return `<div class="donor-item"><div class="donor-avatar">${init}</div><div class="donor-info"><div class="donor-name">${d.name}</div><div class="donor-time">Recently</div></div><div class="donor-trees">${trees} 🌳</div></div>`;
-                }).join('');
-            } else {
-                list.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:12px; padding:10px;">Be the first planter! 🌱</div>';
-            }
-        } catch(e) { console.log("Recent load error:", e); }
-    }
+            if (!name || !email || !amount) { showError('Please fill all required fields!'); return; }
+            if (amount < 10) { showError('Minimum donation amount is ₹10'); return; }
 
-    function selectTrees(trees, amount, el) {
-        document.getElementById('amount').value = amount;
-        document.querySelectorAll('.tree-chip').forEach(c => c.classList.remove('active'));
-        el.classList.add('active');
-    }
+            donationData = { name, email, amount: parseInt(amount), message };
 
-    function showToast(msg) {
-        const t = document.getElementById('toast'); t.textContent = msg; t.style.display = 'block';
-        setTimeout(() => t.style.display = 'none', 3000);
-    }
+            // Save to Supabase immediately
+            const { data, error } = await supabaseClient
+                .from('donations')
+                .insert([{
+                    name: donationData.name,
+                    email: donationData.email,
+                    amount: donationData.amount,
+                    message: donationData.message || null,
+                    screenshot_url: null,
+                    status: 'qr_generated'
+                }])
+                .select();
 
-    function showError(msg) {
-        const e = document.getElementById('errorMsg'); e.textContent = msg; e.style.display = 'block';
-        setTimeout(() => e.style.display = 'none', 4000);
-    }
+            if (error) { showError('Database error: ' + error.message); return; }
 
-    function updateStep(n) {
-        document.querySelectorAll('.step').forEach((s, i) => {
-            s.classList.remove('active', 'completed');
-            if(i+1 < n) s.classList.add('completed');
-            else if(i+1 === n) s.classList.add('active');
-        });
-    }
+            currentDonationId = data[0].id;
 
-    async function generateQR() {
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const amount = parseInt(document.getElementById('amount').value);
-        const msg = document.getElementById('message').value.trim();
-
-        if(!name || !email || !amount) { showError('Please fill all required fields.'); return; }
-        if(amount < 100) { showError('Minimum donation is ₹100 (1 Tree).'); return; }
-
-        currentData = { name, email, amount, message: msg, trees: Math.floor(amount/100) };
-        const btn = document.getElementById('continueBtn');
-        btn.disabled = true; btn.textContent = 'Saving...';
-
-        try {
-            const { data, error } = await supabase.from('donations').insert([{
-                name, email, amount, message: msg, screenshot_url: null, status: 'qr_generated'
-            }]).select();
-
-            btn.disabled = false; btn.textContent = 'Continue to Payment';
-            if(error) throw error;
-            
-            currentId = data[0].id;
             document.getElementById('formSection').style.display = 'none';
             document.getElementById('qrSection').style.display = 'block';
             document.getElementById('displayAmount').textContent = amount;
-            document.getElementById('displayTrees').textContent = currentData.trees;
-            updateStep(2);
-        } catch(err) {
-            btn.disabled = false; btn.textContent = 'Continue to Payment';
-            showError('Database Error: ' + err.message);
+
+            setTimeout(() => { document.getElementById('uploadSection').style.display = 'block'; }, 1500);
         }
-    }
 
-    function handleFile() {
-        const file = document.getElementById('screenshot').files[0];
-        if(file) {
-            if(file.size > 5*1024*1024) { showToast('Max 5MB allowed.'); return; }
-            currentFile = file;
-            const box = document.getElementById('uploadBox');
-            box.innerHTML = `<strong>✅ ${file.name}</strong><br><span style="font-size:11px;">${(file.size/1024).toFixed(1)} KB Ready</span>`;
-            box.classList.add('uploaded');
-            document.getElementById('submitBtn').style.display = 'block';
+        function handleFileSelect() {
+            const file = document.getElementById('screenshot').files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) { showError('File size must be less than 5MB'); return; }
+                selectedFile = file;
+                document.getElementById('fileLabel').textContent = `✅ ${file.name}`;
+                document.getElementById('submitBtn').style.display = 'block';
+            }
         }
-    }
 
-    async function submitDonation() {
-        if(!currentFile) { showToast('Please upload screenshot!'); return; }
-        
-        document.getElementById('qrSection').style.display = 'none';
-        document.getElementById('loadingSection').style.display = 'block';
+        async function submitDonation() {
+            if (!selectedFile) { showError('Please upload payment screenshot!'); return; }
 
-        try {
-            const ext = currentFile.name.split('.').pop();
-            const fname = `tree_${Date.now()}.${ext}`;
-            await supabase.storage.from('donation-screenshots').upload(fname, currentFile);
-            const { data: urlData } = supabase.storage.from('donation-screenshots').getPublicUrl(fname);
-            
-            await supabase.from('donations').update({ screenshot_url: urlData.publicUrl, status: 'pending' }).eq('id', currentId);
+            document.getElementById('qrSection').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
 
-            document.getElementById('loadingSection').style.display = 'none';
-            document.getElementById('successSection').style.display = 'block';
-            updateStep(3);
-            
-            document.getElementById('r-id').textContent = '#' + currentId.toString().padStart(6, '0');
-            document.getElementById('r-name').textContent = currentData.name;
-            document.getElementById('r-email').textContent = currentData.email;
-            document.getElementById('r-amount').textContent = '₹' + currentData.amount;
-            document.getElementById('r-trees').textContent = currentData.trees + ' 🌳';
-            document.getElementById('r-date').textContent = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' });
+            try {
+                const fileExt = selectedFile.name.split('.').pop();
+                const fileName = `donation_${Date.now()}.${fileExt}`;
 
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#059669', '#10b981', '#047857'] });
-            loadStats(); loadRecent();
-        } catch(e) {
-            console.error(e); 
-            showToast('Error processing. Try again.');
-            document.getElementById('loadingSection').style.display = 'none';
-            document.getElementById('qrSection').style.display = 'block';
+                const { error: uploadError } = await supabaseClient.storage
+                    .from('donation-screenshots')
+                    .upload(fileName, selectedFile);
+
+                if (uploadError) throw uploadError;
+
+                const { data: urlData } = supabaseClient.storage
+                    .from('donation-screenshots')
+                    .getPublicUrl(fileName);
+
+                // Update the row with screenshot
+                const { error: updateError } = await supabaseClient
+                    .from('donations')
+                    .update({ screenshot_url: urlData.publicUrl, status: 'pending' })
+                    .eq('id', currentDonationId);
+
+                if (updateError) throw updateError;
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('success').style.display = 'block';
+
+            } catch (err) {
+                console.error('Error:', err);
+                showError('Something went wrong! Please try again.');
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('qrSection').style.display = 'block';
+            }
         }
-    }
-
-    function printReceipt() {
-        const r = document.getElementById('receiptPreview').innerHTML;
-        const w = window.open('', '', 'width=600,height=500');
-        w.document.write(`
-            <html><head><title>Tree Plantation Receipt</title>
-            <style>
-                body { font-family: 'Inter', sans-serif; padding: 40px; color: #111827; }
-                .receipt-header { display: flex; justify-content: space-between; border-bottom: 2px solid #059669; padding-bottom: 15px; margin-bottom: 20px; }
-                .receipt-logo { font-size: 20px; font-weight: 700; color: #059669; }
-                .receipt-id { font-size: 12px; color: #6b7280; font-family: monospace; }
-                .receipt-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
-                .label { color: #6b7280; } .val { font-weight: 600; }
-                .receipt-footer { margin-top: 30px; text-align: center; font-size: 12px; color: #6b7280; border-top: 1px dashed #e5e7eb; padding-top: 15px; }
-                h2 { text-align: center; color: #059669; margin-bottom: 5px; }
-                .sub { text-align: center; color: #6b7280; font-size: 12px; margin-bottom: 30px; }
-            </style></head><body>
-            <h2>🌳 Certificate of Contribution</h2>
-            <div class="sub">Thank you for making the earth greener!</div>
-            ${r}
-            <script>window.onload = () => window.print();<\/script>
-            </body></html>
-        `);
-        w.document.close();
-    }
-
-    function shareDonation() {
-        const text = `I just planted ${currentData.trees} trees with KES Updates! 🌳 Join me in making the earth greener.`;
-        if(navigator.share) navigator.share({ title: 'KES Updates', text, url: window.location.href });
-        else { navigator.clipboard.writeText(text + ' ' + window.location.href); showToast('Link copied!'); }
-    }
-</script>
+    </script>
 </body>
 </html>
