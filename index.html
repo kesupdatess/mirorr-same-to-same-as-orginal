@@ -6,7 +6,7 @@
 <title>KES Updates - Donation</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#f8fafc 0%,#e0e7ff 100%);color:#0f172a;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:12px}
@@ -48,6 +48,10 @@ textarea.inp{resize:vertical;min-height:65px}
 @keyframes pop{0%{transform:scale(0)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
 .suc h2{font-size:24px;font-weight:800;margin-bottom:8px;color:#0f172a}
 .suc>p{color:#64748b;font-size:14px;margin-bottom:20px}
+.token-box{background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #f59e0b;border-radius:14px;padding:16px;margin-bottom:18px;text-align:center}
+.token-box .tk-label{font-size:11px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.token-box .tk-id{font-size:22px;font-weight:800;color:#78350f;letter-spacing:1px}
+.token-box .tk-msg{font-size:12px;color:#92400e;margin-top:8px;font-weight:500;line-height:1.5}
 .sd{background:linear-gradient(135deg,#f8fafc,#f1f5f9);border:1.5px solid #e2e8f0;border-radius:16px;padding:18px;margin:0 0 18px 0;text-align:left}
 .sd .dr{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #e2e8f0;font-size:13px}
 .sd .dr:last-child{border-bottom:none}
@@ -74,7 +78,7 @@ textarea.inp{resize:vertical;min-height:65px}
 .prog-step.active .prog-dot{background:#2563eb;animation:pulse 1s infinite}
 .prog-step.done .prog-dot{background:#059669}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-@media(max-width:380px){.container{padding:22px 18px;border-radius:20px}.header h1{font-size:22px}.amts{grid-template-columns:repeat(2,1fr)}.ab.cust{grid-column:span 2}.abtn{font-size:11px;padding:11px 8px}}
+@media(max-width:380px){.container{padding:22px 18px;border-radius:20px}.header h1{font-size:22px}.amts{grid-template-columns:repeat(2,1fr)}.ab.cust{grid-column:span 2}.abtn{font-size:11px;padding:11px 8px}.token-box .tk-id{font-size:18px}}
 </style>
 </head>
 <body>
@@ -84,7 +88,6 @@ textarea.inp{resize:vertical;min-height:65px}
 <p>Donation for Tree Plantation</p>
 <div class="badge">Secure & Verified</div>
 </div>
-
 <div id="fs">
 <div class="fg"><label>Full Name *</label><input type="text" id="name" class="inp" placeholder="Enter your name"></div>
 <div class="fg"><label>Email *</label><input type="email" id="email" class="inp" placeholder="your@email.com"></div>
@@ -102,9 +105,8 @@ textarea.inp{resize:vertical;min-height:65px}
 </div>
 <div class="fg"><label>Message (Optional)</label><textarea id="msg" class="inp" placeholder="Your thoughts..."></textarea></div>
 <div class="err" id="err"></div>
-<button class="btn bp" onclick="goQR()">Continue to Payment</button>
+<button class="btn bp" onclick="goQR()">Continue to Payment →</button>
 </div>
-
 <div id="qs" class="qr">
 <h3>Scan & Pay to KES Updates</h3>
 <div class="ad">Rs <span id="da">0</span></div>
@@ -112,11 +114,10 @@ textarea.inp{resize:vertical;min-height:65px}
 <p style="color:#475569;font-size:12px;margin-top:10px;font-weight:500">Use any UPI app</p>
 <div class="fl">
 <input type="file" id="ss" accept="image/*" onchange="hf()">
-<label for="ss" id="fl">Tap to upload screenshot</label>
+<label for="ss" id="fl">📷 Tap to upload screenshot</label>
 </div>
-<button class="btn bs" id="sb" onclick="sub()">Submit Donation</button>
+<button class="btn bs" id="sb" onclick="sub()">✓ Submit Donation</button>
 </div>
-
 <div id="ld" class="ld">
 <div class="sp"></div>
 <p style="color:#64748b;font-weight:600;font-size:13px;margin-bottom:16px">Processing...</p>
@@ -126,17 +127,22 @@ textarea.inp{resize:vertical;min-height:65px}
 <div class="prog-step" id="p3"><div class="prog-dot"></div><span>Verifying payment...</span></div>
 </div>
 </div>
-
 <div id="sc" class="suc">
 <div class="sic">✓</div>
 <h2>Thank You!</h2>
-<p>Your donation to KES Updates was successful.</p>
+<p>Your donation has been received successfully.</p>
+<div class="token-box">
+<div class="tk-label">Your Token Number</div>
+<div class="tk-id" id="si">#KES-00000</div>
+<div class="tk-msg">📧 Certificate & Receipt will be sent to your email after verification.<br>Save this token for reference.</div>
+</div>
 <div class="sd">
 <div class="dr"><span class="dl">Name</span><span class="dv" id="sn">-</span></div>
+<div class="dr"><span class="dl">Email</span><span class="dv" id="se">-</span></div>
 <div class="dr"><span class="dl">Amount</span><span class="dv" id="sa">Rs 0</span></div>
 <div class="dr"><span class="dl">Impact</span><span class="dv" id="st" style="color:#059669">-</span></div>
 <div class="dr"><span class="dl">Date</span><span class="dv" id="sd">-</span></div>
-<div class="dr"><span class="dl">ID</span><span class="dv" id="si">#000000</span></div>
+<div class="dr"><span class="dl">Status</span><span class="dv" style="color:#ea580c">⏳ Pending Verification</span></div>
 </div>
 <div class="abs">
 <button class="abtn wa" onclick="sw()">
@@ -147,30 +153,18 @@ WhatsApp
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
 Share
 </button>
-<button class="abtn" onclick="dc()">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-Download Cert
-</button>
-<button class="abtn" onclick="pr()">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-Print Receipt
-</button>
 </div>
 </div>
 </div>
-
 <script>
 const U='https://uegdizdnminwhkxcdcle.supabase.co',K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVlZ2RpemRubWlud2hreGNkY2xlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwODk2MjgsImV4cCI6MjA5NzY2NTYyOH0.2wiAHbaoNoDva_tRseDAywVMu_6AioCGlVLgoVb0d6s';
 const sb=window.supabase.createClient(U,K);
 let D={},F=null,I=null;
-
 const tc=a=>Math.max(1,Math.floor(a/10));
 const it=a=>{const t=tc(a);return t+' Tree'+(t===1?'':'s')+' Planted'};
 const er=m=>{const e=document.getElementById('err');e.textContent=m;e.style.display='block';setTimeout(()=>e.style.display='none',3000)};
 const sel=(a,b)=>{document.querySelectorAll('.ab').forEach(x=>x.classList.remove('on'));b.classList.add('on');if(a!=='c'){document.getElementById('amt').value=a}else{document.getElementById('amt').value='';setTimeout(()=>document.getElementById('amt').focus(),100)}};
 const clr=()=>document.querySelectorAll('.ab').forEach(x=>x.classList.remove('on'));
-
-// IMAGE COMPRESSION - 70-80% size reduction
 function compressImage(file){
 return new Promise((resolve)=>{
 const canvas=document.createElement('canvas');
@@ -179,10 +173,7 @@ const img=new Image();
 img.onload=()=>{
 let w=img.width,h=img.height;
 const max=1200;
-if(w>max||h>max){
-if(w>h){h=Math.round(h*max/w);w=max}
-else{w=Math.round(w*max/h);h=max}
-}
+if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max}else{w=Math.round(w*max/h);h=max}}
 canvas.width=w;canvas.height=h;
 ctx.drawImage(img,0,0,w,h);
 canvas.toBlob(blob=>resolve(blob),'image/jpeg',0.7);
@@ -190,7 +181,6 @@ canvas.toBlob(blob=>resolve(blob),'image/jpeg',0.7);
 img.src=URL.createObjectURL(file);
 });
 }
-
 async function goQR(){
 const n=document.getElementById('name').value.trim(),e=document.getElementById('email').value.trim(),a=document.getElementById('amt').value,m=document.getElementById('msg').value.trim();
 if(!n||!e||!a){er('Fill all required fields');return}
@@ -200,56 +190,48 @@ D={n,e,a:+a,m};
 const b=document.querySelector('#fs .bp');b.disabled=true;b.textContent='Processing...';
 try{
 const{data,error}=await sb.from('donations').insert([{name:n,email:e,amount:a,message:m||null,screenshot_url:null,status:'qr_generated'}]).select();
-b.disabled=false;b.textContent='Continue to Payment';
+b.disabled=false;b.textContent='Continue to Payment →';
 if(error)throw error;
 I=data[0].id;
 document.getElementById('fs').style.display='none';
 document.getElementById('qs').style.display='block';
 document.getElementById('da').textContent=a;
 setTimeout(()=>document.querySelector('.fl').style.display='block',1200);
-}catch(x){b.disabled=false;b.textContent='Continue to Payment';er('Error: '+x.message)}
+}catch(x){b.disabled=false;b.textContent='Continue to Payment →';er('Error: '+x.message)}
 }
-
 function hf(){
 const f=document.getElementById('ss').files[0];
 if(f){
 if(f.size>5*1024*1024){er('Max 5MB');return}
 if(!f.type.startsWith('image/')){er('Images only');return}
 F=f;
-document.getElementById('fl').innerHTML='Uploaded: '+f.name;
+document.getElementById('fl').innerHTML='✅ Uploaded: '+f.name;
 document.getElementById('sb').style.display='flex';
 }}
-
 async function sub(){
 if(!F){er('Upload screenshot');return}
 document.getElementById('qs').style.display='none';
 document.getElementById('ld').style.display='block';
-
 try{
-// Step 1: Compress
 document.getElementById('p1').classList.add('active');
 const compressed=await compressImage(F);
 document.getElementById('p1').classList.remove('active');
 document.getElementById('p1').classList.add('done');
-
-// Step 2: Upload
 document.getElementById('p2').classList.add('active');
 const x=F.name.split('.').pop(),fn='d_'+Date.now()+'.'+x;
 await sb.storage.from('donation-screenshots').upload(fn,compressed);
 const{data:u}=sb.storage.from('donation-screenshots').getPublicUrl(fn);
 document.getElementById('p2').classList.remove('active');
 document.getElementById('p2').classList.add('done');
-
-// Step 3: Verify
 document.getElementById('p3').classList.add('active');
 await sb.from('donations').update({screenshot_url:u.publicUrl,status:'pending'}).eq('id',I);
 document.getElementById('p3').classList.remove('active');
 document.getElementById('p3').classList.add('done');
-
 setTimeout(()=>{
 document.getElementById('ld').style.display='none';
 document.getElementById('sc').style.display='block';
 document.getElementById('sn').textContent=D.n;
+document.getElementById('se').textContent=D.e;
 document.getElementById('sa').textContent='Rs '+D.a;
 document.getElementById('st').textContent=it(D.a);
 document.getElementById('sd').textContent=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
@@ -258,100 +240,23 @@ confetti({particleCount:100,spread:70,origin:{y:.6},colors:['#059669','#2563eb',
 },500);
 }catch(x){console.error(x);er('Try again');document.getElementById('ld').style.display='none';document.getElementById('qs').style.display='block'}
 }
-
-function sw(){const t='I donated Rs '+D.a+' to KES Updates! '+it(D.a)+'.';window.open('https://wa.me/?text='+encodeURIComponent(t+' '+location.href),'_blank')}
-function si(){const t='I donated Rs '+D.a+' to KES Updates! '+it(D.a);if(navigator.share)navigator.share({title:'KES Updates',text:t,url:location.href});else{navigator.clipboard.writeText(t+' '+location.href);alert('Copied!')}}
-
-function op(h){
-const b=new Blob([h],{type:'text/html'}),u=URL.createObjectURL(b),w=window.open(u,'_blank');
-if(w)w.onload=()=>setTimeout(()=>w.print(),600);
-else alert('Allow popups in browser!');
-}
-
-function dc(){
-const t=tc(D.a),id='KES-CERT-'+I.toString().padStart(5,'0'),d=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
-const h=`<!DOCTYPE html><html><head><title>Certificate - KES Updates</title><style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600;700&display=swap');
-@page{size:A4 landscape;margin:0}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Inter,sans-serif;background:#f1f5f9;padding:20px;display:flex;align-items:center;justify-content:center;min-height:100vh}
-.c{width:100%;max-width:1100px;aspect-ratio:1.414;background:#fff;border:14px solid #064e3b;padding:6px;box-shadow:0 15px 30px rgba(0,0,0,.12)}
-.ci{border:2px solid #059669;padding:40px 50px;text-align:center;height:100%;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(135deg,#fff,#f0fdf4)}
-.lt{font-size:14px;font-weight:700;color:#059669;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px}
-.ct{font-family:'Playfair Display',serif;font-size:48px;color:#064e3b;margin-bottom:8px;font-weight:900}
-.cs{font-size:13px;color:#64748b;text-transform:uppercase;letter-spacing:3px;font-weight:600}
-.pt{font-size:14px;color:#64748b;margin-bottom:8px}
-.rn{font-family:'Playfair Display',serif;font-size:44px;color:#0f172a;margin:8px 0 24px;font-weight:700;border-bottom:2px solid #059669;display:inline-block;padding:0 30px 10px}
-.cd{font-size:16px;color:#475569;line-height:1.7;margin:16px auto;max-width:750px}
-.cd strong{color:#059669}
-.ib{background:rgba(5,150,105,.1);border:2px solid #059669;border-radius:10px;padding:14px 24px;display:inline-block;margin:16px auto;font-size:18px;font-weight:700;color:#064e3b}
-.cf{display:flex;justify-content:space-between;padding-top:16px;border-top:1px solid #e2e8f0;margin-top:auto}
-.cf div{text-align:center;flex:1}
-.cf .l{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;font-weight:600}
-.cf .v{font-size:14px;color:#0f172a;font-weight:600}
-.sg{font-family:'Playfair Display',serif;font-size:22px;color:#059669;font-style:italic;margin-top:6px}
-@media print{body{padding:0;background:#fff}.c{box-shadow:none;border:14px solid #064e3b}}
-@media(max-width:600px){.ci{padding:24px 16px}.ct{font-size:28px}.rn{font-size:26px;padding:0 16px 8px}.cd{font-size:13px}.ib{font-size:14px;padding:10px 16px}.cf{flex-direction:column;gap:16px}}
-</style></head><body>
-<div class="c"><div class="ci">
-<div><div class="lt">KES Updates</div><div class="ct">Certificate of Appreciation</div><div class="cs">Tree Plantation Initiative</div></div>
-<div>
-<div class="pt">This certificate is proudly presented to</div>
-<div class="rn">${D.n}</div>
-<div class="cd">In recognition of your generous contribution of <strong>Rs ${D.a}</strong> to KES Updates. Through your support, <strong>${t} ${t===1?'tree has':'trees have'}</strong> been planted, contributing to a greener planet.</div>
-<div class="ib">${t} ${t===1?'Tree':'Trees'} Planted</div>
-</div>
-<div class="cf">
-<div><div class="l">Date</div><div class="v">${d}</div></div>
-<div><div class="l">Certificate ID</div><div class="v">${id}</div></div>
-<div><div class="l">Authorized By</div><div class="sg">KES Updates</div></div>
-</div>
-</div></div>
-</body></html>`;
-op(h);
-}
-
-function pr(){
-const t=tc(D.a),id='KES-RCP-'+I.toString().padStart(5,'0'),d=new Date().toLocaleString('en-IN',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-const h=`<!DOCTYPE html><html><head><title>Receipt - KES Updates</title><style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-@page{size:A4;margin:20mm}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Inter,sans-serif;background:#f1f5f9;padding:20px;display:flex;align-items:center;justify-content:center;min-height:100vh}
-.r{width:100%;max-width:210mm;background:#fff;border-radius:14px;padding:32px 24px;box-shadow:0 8px 25px rgba(0,0,0,.08)}
-.rh{text-align:center;padding-bottom:20px;border-bottom:2px dashed #e2e8f0;margin-bottom:20px}
-.rh h1{font-size:22px;color:#0f172a;margin-bottom:4px;font-weight:800}
-.rh p{font-size:12px;color:#64748b}
-.ri{display:inline-block;background:#ecfdf5;color:#059669;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:700;margin-top:10px;letter-spacing:.5px}
-.st{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin:16px 0 10px}
-.rr{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px}
-.rr:last-child{border-bottom:none}
-.rr .l{color:#64748b;font-weight:500}
-.rr .v{color:#0f172a;font-weight:600;text-align:right}
-.rt{background:linear-gradient(135deg,#ecfdf5,#d1fae5);padding:20px;border-radius:10px;margin:20px 0;text-align:center;border:2px solid #059669}
-.rt .a{font-size:36px;font-weight:800;color:#064e3b;letter-spacing:-1px}
-.rt .t{font-size:13px;color:#059669;margin-top:4px;font-weight:600}
-.rf{text-align:center;padding-top:20px;border-top:2px dashed #e2e8f0}
-.rf p{font-size:11px;color:#64748b;line-height:1.6}
-.rf .ty{font-size:15px;color:#059669;font-weight:700;margin-bottom:8px}
-@media print{body{padding:0;background:#fff}.r{box-shadow:none;border:1px solid #e2e8f0}}
-</style></head><body>
-<div class="r">
-<div class="rh"><h1>KES Updates</h1><p>Official Donation Receipt</p><div class="ri">${id}</div></div>
-<div class="st">Donor Information</div>
-<div class="rr"><span class="l">Name</span><span class="v">${D.n}</span></div>
-<div class="rr"><span class="l">Email</span><span class="v">${D.e}</span></div>
-<div class="st">Transaction Details</div>
-<div class="rr"><span class="l">Date & Time</span><span class="v">${d}</span></div>
-<div class="rr"><span class="l">Payment</span><span class="v">UPI</span></div>
-<div class="rr"><span class="l">Status</span><span class="v" style="color:#059669;font-weight:700">Verified</span></div>
-<div class="rr"><span class="l">Impact</span><span class="v">${t} Trees</span></div>
-<div class="rt"><div class="a">Rs ${D.a}</div><div class="t">${t} ${t===1?'Tree':'Trees'} Planted</div></div>
-<div class="rf"><p class="ty">Thank You for Supporting KES Updates!</p><p>Your contribution helps keep students informed and the earth green.</p><p style="margin-top:8px">kesupdatess@gmail.com</p></div>
-</div>
-</body></html>`;
-op(h);
+function sw(){const t='I donated Rs '+D.a+' to KES Updates! '+it(D.a)+'. Token: #KES-'+I.toString().padStart(5,'0');window.open('https://wa.me/?text='+encodeURIComponent(t+' '+location.href),'_blank')}
+function si(){
+    const t='I donated Rs '+D.a+' to KES Updates! '+it(D.a)+'. Token: #KES-'+I.toString().padStart(5,'0');
+    if(navigator.share){
+        navigator.share({title:'KES Updates',text:t,url:location.href})
+        .catch(err=>{
+            if(err.name!=='AbortError'){
+                navigator.clipboard.writeText(t+' '+location.href);
+                alert('Link copied to clipboard!');
+            }
+        });
+    }else{
+        navigator.clipboard.writeText(t+' '+location.href);
+        alert('Link copied to clipboard!');
+    }
 }
 </script>
 </body>
 </html>
+
